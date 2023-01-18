@@ -15,11 +15,13 @@ https://github.com/Yoni7/GoGithubEvents is the canonical Git repository.
 ## Service description
 
 The service includes of 2 main parts:
-1. Periodically watches public github event via an API call to `https://api.github.com/events`. 
+1. `github_events.go`
+Periodically watches public github event via an API call to `https://api.github.com/events`. 
     The required data (event types, actors, repo urls, unique emails) are stored in MongoDB.
     The Entry point to this section is `GetPublicEvents`
 
-2. Webserver the listens on port 8080 and expose 4 routes to retireve the information about the github global events from MongoDB via GET method:
+2. `server.go`
+Webserver the listens on port 8080 and expose 4 routes to retireve the information about the github global events from MongoDB via GET method:
     - `/github/event`: All the event types names and how many time have we seen them
     - `/github/actors`: Unique name of the last 50 actors.
     - `/github/repos`: The last 20 repository URLs and there stars counter
