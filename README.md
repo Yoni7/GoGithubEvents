@@ -33,4 +33,5 @@ The MongoDB is hosted at MongoDB Atlas
 This project can also be used with a docker image. Check out `Dockerfile`.
 
 ## Notes
-The env varialbes fallback in the code is only for local debugging purposes (in a real production environment they must come has ENV)
+The env varialbes fallback in the code is only for local debugging purposes (in a real production environment they must come has ENV).
+For querying github API there is a hard-coded token for dummy user. you can use you own if you provide env variable `GITHUB_TOKEN=<your_token>`.
