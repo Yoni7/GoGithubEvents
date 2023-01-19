@@ -21,11 +21,14 @@ Periodically watches public github event via an API call to `https://api.github.
     The Entry point to this section is `GetPublicEvents`
 
 2. `server.go`
-Webserver the listens on port 8080 and expose 4 routes to retireve the information about the github global events from MongoDB via GET method:
+Webserver the listens on port `8080` and expose 4 routes to retireve the information about the github global events from MongoDB via GET method:
     - `/github/event`: All the event types names and how many time have we seen them
     - `/github/actors`: Unique name of the last 50 actors.
     - `/github/repos`: The last 20 repository URLs and there stars counter
     - `/github/emails`: All of the unique email addresses found in github global events
 
-The MongoDB is host at MongoDB Atlas
+The MongoDB is hosted at MongoDB Atlas
+
+## Docker
+This project can also be used with a docker image. Check out `Dockerfile`.
 
