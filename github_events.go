@@ -35,7 +35,9 @@ func getPublicEvents() {
 func getDataFromGithubApi(url string) ([]byte, error) {
 	method := "GET"
 
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: 5 * time.Second,
+	}
 	req, err := http.NewRequest(method, url, nil)
 
 	var b []byte
