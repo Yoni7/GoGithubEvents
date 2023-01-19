@@ -44,7 +44,7 @@ func getDataFromGithubApi(url string) ([]byte, error) {
 		return b, err
 	}
 
-	req.Header.Add("Authorization", "Bearer " + utility.GetEnv("GITHUB_TOKEN", "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"))
+	req.Header.Add("Authorization", "Bearer " + utility.GetEnv("GITHUB_TOKEN", "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"))
 
 	res, err := client.Do(req)
 	if err != nil {
