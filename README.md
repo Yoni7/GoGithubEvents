@@ -32,3 +32,5 @@ The MongoDB is hosted at MongoDB Atlas
 ## Docker
 This project can also be used with a docker image. Check out `Dockerfile`.
 
+## Notes
+The env varialbes fallback in the code is only for local debugging purposes (in a real production environment they must come has ENV)
