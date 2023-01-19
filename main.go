@@ -5,7 +5,7 @@ func main() {
 	ConnectToMongoDB()
 
 	// Periodically watch public Github events
-	go GetPublicEvents()
+	go GetPublicEventsPeriodically()
 
 	// starting server for API requests
 	RunServer()

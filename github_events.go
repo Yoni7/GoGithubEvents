@@ -6,13 +6,24 @@ import (
 	"io/ioutil"
 	"net/http"
 	"sync"
+	"time"
 	"sort"
-	"regexp"
+
+	"github-app/utility"
 )
 
 
-func GetPublicEvents() {
-	body, err := getDataFromGithubApi("https://api.github.com/events?per_page=200")
+func GetPublicEventsPeriodically() {
+	getPublicEvents()
+
+	// re-call after 10 minutes
+	time.AfterFunc(10 * time.Minute, GetPublicEventsPeriodically)
+}
+
+func getPublicEvents() {
+	fmt.Println("GetPublicEvents: started")
+
+	body, err := getDataFromGithubApi("https://api.github.com/events")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -33,7 +44,7 @@ func getDataFromGithubApi(url string) ([]byte, error) {
 		return b, err
 	}
 
-	req.Header.Add("Authorization", "Bearer " + GetEnv("GITHUB_TOKEN", "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"))
+	req.Header.Add("Authorization", "Bearer " + utility.GetEnv("GITHUB_TOKEN", "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"))
 
 	res, err := client.Do(req)
 	if err != nil {
@@ -46,6 +57,10 @@ func getDataFromGithubApi(url string) ([]byte, error) {
 	if err != nil {
 		fmt.Println(err)
 		return b, err
+	}
+	if (res.StatusCode != 200) {
+		errStatusCode := fmt.Errorf("getDataFromGithubApi: bad status code %v", res.StatusCode)
+		return nil, errStatusCode
 	}
 
 	return body, nil
@@ -79,7 +94,7 @@ func lookForEmailsInEvent(eventObj map[string]interface {}) {
 	for key, value := range eventObj {
 		if key == "email" {
 			emailAddr := value.(string)
-			if isEmailValid(emailAddr) {
+			if utility.IsEmailValid(emailAddr) {
 				go UpdateEventEmail(emailAddr)
 			}
        	} else if v, ok := value.(map[string]any); ok {
@@ -92,11 +107,6 @@ func lookForEmailsInEvent(eventObj map[string]interface {}) {
 			}
         }
 	}
-}
-
-func isEmailValid(e string) bool {
-    emailRegex := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
-    return emailRegex.MatchString(e)
 }
 
 
@@ -164,7 +174,7 @@ func getRepoStarsFromGithub(repoName string, resultStars chan int){
 
 	body, err := getDataFromGithubApi(url)
 	if err != nil {
-		fmt.Println(err)
+		resultStars <- -1
 		return
 	}
 

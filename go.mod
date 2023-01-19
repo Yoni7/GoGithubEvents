@@ -1,4 +1,4 @@
-module github.com/yoni7/github-app
+module github-app
 
 go 1.18
 

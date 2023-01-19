@@ -8,6 +8,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"github-app/utility"
 )
 
 type Events struct {
@@ -42,8 +44,8 @@ const REPOS_LIMIT = -20
 var MONGO_CLIENT mongo.Client
 
 func ConnectToMongoDB() {
-	mongoUser := GetEnv("MONGO_USER", "yoni")
-	mongoPassword := GetEnv("MONGO_PASSWORD", "DwXzxWKzu1Dc72EX")
+	mongoUser := utility.GetEnv("MONGO_USER", "yoni")
+	mongoPassword := utility.GetEnv("MONGO_PASSWORD", "DwXzxWKzu1Dc72EX")
 
 	var connectionStr = "mongodb+srv://" + mongoUser + ":" + mongoPassword + "@cluster0.3ymvqrs.mongodb.net/?retryWrites=true&w=majority"
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(connectionStr))
