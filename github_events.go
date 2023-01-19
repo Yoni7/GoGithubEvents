@@ -108,27 +108,6 @@ func lookForEmailsInEvent(eventObj map[string]interface {}) {
         }
 	}
 }
-
-
-func GetEventTypes(w http.ResponseWriter, r *http.Request) {
-	events := GetEventsDocs()
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(events)
-}
-
-func GetActors(w http.ResponseWriter, r *http.Request) {
-	actors := GetActorsDocs()
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(actors.Actors)
-}
-
-func GetEmails(w http.ResponseWriter, r *http.Request) {
-	emails := GetEmailsDocs()
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(emails)
-}
-
-
 	
 type repoStars struct {
     Name 	string
@@ -136,7 +115,7 @@ type repoStars struct {
 	Stars	int
 }
 var STARS_WG sync.WaitGroup
-func GetRepoUrls(w http.ResponseWriter, r *http.Request) {
+func GetRepoUrls() []repoStars{
 	repos := GetRepoDocs()
 
 	repoItems := []repoStars{}
@@ -157,8 +136,7 @@ func GetRepoUrls(w http.ResponseWriter, r *http.Request) {
 		return repoItems[i].Stars > repoItems[j].Stars
 	})
 	
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(repoItems)
+	return repoItems
 }
 
 
