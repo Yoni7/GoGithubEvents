@@ -74,25 +74,39 @@ func parseGlobalEvents(body []byte) {
 	json.Unmarshal([]byte(string(body)), &eventsObjects)
 
 	for _, eventObj := range eventsObjects {
-		eventType := eventObj["type"].(string)
-		go UpdateEventType(eventType)
+		
+		handleEventType(eventObj)
 
-		actorObj := eventObj["actor"]
-		actorObjData := actorObj.(map[string]interface {})
-		actorLogin := actorObjData["login"].(string)
-		go UpdateEventActor(actorLogin)
+		handleEventActor(eventObj)
 
-		repoObj := eventObj["repo"]
-		repoObjData := repoObj.(map[string]interface {})
-		repoUrl := repoObjData["url"].(string)
-		repoName := repoObjData["name"].(string)
-		go UpdateEventRepo(repoName, repoUrl)
+		handleEventRepo(eventObj)
 
-		lookForEmailsInEvent(eventObj)
+		handleEventEmail(eventObj)
 	}
 }
 
-func lookForEmailsInEvent(eventObj map[string]interface {}) {
+func handleEventType(eventObj map[string]interface {}) {
+	eventType := eventObj["type"].(string)
+	go UpdateEventType(eventType)
+}
+
+func handleEventActor(eventObj map[string]interface {}) {
+	actorObj := eventObj["actor"]
+	actorObjData := actorObj.(map[string]interface {})
+	actorLogin := actorObjData["login"].(string)
+	go UpdateEventActor(actorLogin)
+}
+
+func handleEventRepo(eventObj map[string]interface {}) {
+	repoObj := eventObj["repo"]
+	repoObjData := repoObj.(map[string]interface {})
+	repoUrl := repoObjData["url"].(string)
+	repoName := repoObjData["name"].(string)
+	go UpdateEventRepo(repoName, repoUrl)
+}
+
+// iterate thorugh the map and look for valid emails (this is a recurise function)
+func handleEventEmail(eventObj map[string]interface {}) {
 	for key, value := range eventObj {
 		if key == "email" {
 			emailAddr := value.(string)
@@ -100,11 +114,11 @@ func lookForEmailsInEvent(eventObj map[string]interface {}) {
 				go UpdateEventEmail(emailAddr)
 			}
        	} else if v, ok := value.(map[string]any); ok {
-            lookForEmailsInEvent(v)
+            handleEventEmail(v)
         } else if v, ok := value.([]any); ok {
 			for _, valueObj := range v {
 				if v, ok := valueObj.(map[string]any); ok {
-					lookForEmailsInEvent(v)
+					handleEventEmail(v)
 				}
 			}
         }
